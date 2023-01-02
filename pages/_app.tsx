@@ -10,6 +10,7 @@ import '@fontsource/roboto/700.css';
 import createEmotionCache from '../utils/createEmotionCache';
 
 import { theme } from '../styles/theme';
+import Head from 'next/head';
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -22,6 +23,10 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
 
   return (
     <CacheProvider value={emotionCache}>
+      <Head>
+        <title>Anunx</title>
+      </Head>
+
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
