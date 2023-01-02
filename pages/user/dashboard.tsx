@@ -8,11 +8,11 @@ import {
   CardContent,
   CardActions,
 } from '@mui/material';
-import { Default } from '../../src/templates/Default';
+import { TemplateDefault } from '../../src/templates/TemplateDefault';
 
 export default function UserDashboard() {
   return (
-    <Default>
+    <TemplateDefault>
       <Container
         maxWidth="sm"
         sx={{
@@ -140,6 +140,6 @@ export default function UserDashboard() {
           </Grid>
         </Grid>
       </Container>
-    </Default>
+    </TemplateDefault>
   );
 }
