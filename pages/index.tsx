@@ -51,7 +51,7 @@ const Home: NextPage = () => {
       </Container>
 
       <Container
-        maxWidth="md"
+        maxWidth="lg"
         sx={{
           paddingBottom: 6,
         }}
