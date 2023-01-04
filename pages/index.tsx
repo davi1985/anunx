@@ -18,13 +18,7 @@ import { TemplateDefault } from '../src/templates/TemplateDefault';
 const Home: NextPage = () => {
   return (
     <TemplateDefault>
-      <Container
-        maxWidth="md"
-        sx={{
-          paddingTop: 8,
-          paddingBottom: 6,
-        }}
-      >
+      <Container maxWidth="md">
         <Typography
           component={'h1'}
           variant="h3"

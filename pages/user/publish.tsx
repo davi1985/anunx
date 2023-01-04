@@ -4,7 +4,6 @@ import {
   Button,
   Container,
   FormControl,
-  FormLabel,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -15,7 +14,7 @@ import {
 } from '@mui/material';
 import { TemplateDefault } from '../../src/templates/TemplateDefault';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 export default function PublishedPage() {
@@ -39,13 +38,7 @@ export default function PublishedPage() {
 
   return (
     <TemplateDefault>
-      <Container
-        maxWidth="sm"
-        sx={{
-          paddingTop: 8,
-          paddingBottom: 6,
-        }}
-      >
+      <Container maxWidth="sm">
         <Typography
           component={'h1'}
           variant="h3"

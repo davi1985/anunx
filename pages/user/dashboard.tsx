@@ -13,13 +13,7 @@ import { TemplateDefault } from '../../src/templates/TemplateDefault';
 export default function UserDashboard() {
   return (
     <TemplateDefault>
-      <Container
-        maxWidth="sm"
-        sx={{
-          paddingTop: 8,
-          paddingBottom: 6,
-        }}
-      >
+      <Container maxWidth="sm">
         <Typography component={'h1'} variant="h2" align="center">
           Meus Anúncios
         </Typography>
