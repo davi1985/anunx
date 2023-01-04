@@ -3,7 +3,12 @@ import {
   Box,
   Button,
   Container,
+  FormControl,
+  FormLabel,
   IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
   Select,
   TextField,
   Typography,
@@ -202,6 +207,26 @@ export default function PublishedPage() {
           </Typography>
 
           <TextField multiline rows={6} variant="outlined" fullWidth />
+        </Box>
+      </Container>
+
+      <Container maxWidth="md" sx={{ marginTop: 2 }}>
+        <Box sx={{ backgroundColor: '#fff', padding: 3 }} borderRadius={1}>
+          <Typography component={'h6'} variant="h6" gutterBottom>
+            Preço
+          </Typography>
+
+          <FormControl fullWidth variant="outlined" component={'fieldset'}>
+            <InputLabel>Valor</InputLabel>
+
+            <OutlinedInput
+              label="Valor"
+              onChange={() => {}}
+              startAdornment={
+                <InputAdornment position="start">R$</InputAdornment>
+              }
+            />
+          </FormControl>
         </Box>
       </Container>
 
