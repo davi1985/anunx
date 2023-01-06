@@ -8,6 +8,7 @@ export const Footer = () => {
       component={'footer'}
       sx={{
         borderTop: '1px solid #ccc',
+        paddingBottom: 2,
       }}
     >
       <Grid
