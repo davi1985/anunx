@@ -21,7 +21,7 @@ import { FileInput } from '../../../src/components/FileInput';
 import {
   initialValues,
   validationSchema,
-} from '../../../utils/validationSchema';
+} from '../../../utils/publishValidationSchema';
 
 interface FormValues {
   title: string;
@@ -35,7 +35,7 @@ interface FormValues {
 }
 
 export default function PublishedPage() {
-  const methods = useForm({
+  const methods = useForm<FormValues>({
     defaultValues: initialValues,
     mode: 'onBlur',
     resolver: yupResolver(validationSchema),
