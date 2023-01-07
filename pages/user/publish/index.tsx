@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { DeleteForever } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -7,7 +6,6 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
-  IconButton,
   InputAdornment,
   InputLabel,
   MenuItem,
@@ -16,13 +14,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { TemplateDefault } from '../../src/templates/TemplateDefault';
+import { TemplateDefault } from '../../../src/templates/TemplateDefault';
 
-import { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { validationSchema } from '../../utils/validationSchema';
-import { FileInput } from '../../src/components/FileInput';
+import { FileInput } from '../../../src/components/FileInput';
+import {
+  initialValues,
+  validationSchema,
+} from '../../../utils/validationSchema';
 
 interface FormValues {
   title: string;
@@ -36,19 +35,8 @@ interface FormValues {
 }
 
 export default function PublishedPage() {
-  const [files, setFiles] = useState<File[]>([]);
-
   const methods = useForm({
-    defaultValues: {
-      title: '',
-      category: '',
-      description: '',
-      price: '',
-      fullName: '',
-      email: '',
-      cellPhone: '',
-      files: [],
-    },
+    defaultValues: initialValues,
     mode: 'onBlur',
     resolver: yupResolver(validationSchema),
   });
@@ -58,27 +46,9 @@ export default function PublishedPage() {
     handleSubmit,
     formState: { errors },
     control,
-    setValue,
   } = methods;
 
   const onSubmit = (data: FormValues) => console.log(data);
-
-  // const onDrop = useCallback(
-  //   (acceptedFiles: File[]) => {
-  //     const newFiles = acceptedFiles.map((file) => URL.createObjectURL(file));
-
-  //     setFiles((prev) => [...files, newFiles]);
-  //   },
-  //   [files]
-  // );
-
-  // const { getRootProps, getInputProps } = useDropzone({
-  //   onDrop,
-  // });
-
-  // const handleRemoveFile = (file: File) => {
-  //   setFiles(files.filter((fileSaved) => fileSaved !== file));
-  // };
 
   return (
     <TemplateDefault>

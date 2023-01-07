@@ -1,5 +1,16 @@
 import * as Yup from 'yup';
 
+export const initialValues = {
+  title: '',
+  category: '',
+  description: '',
+  price: '',
+  fullName: '',
+  email: '',
+  cellPhone: '',
+  files: [],
+};
+
 const errorMessages = {
   REQUIRED: 'Campo obrigatório',
   TITLE_MIN: 'Escreva um título maior',
