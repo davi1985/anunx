@@ -1,12 +1,16 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { DeleteForever } from '@mui/icons-material';
 import {
   Box,
   Button,
   Container,
   FormControl,
+  FormHelperText,
+  FormLabel,
   IconButton,
   InputAdornment,
   InputLabel,
+  MenuItem,
   OutlinedInput,
   Select,
   TextField,
@@ -16,251 +20,270 @@ import { TemplateDefault } from '../../src/templates/TemplateDefault';
 
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { validationSchema } from '../../utils/validationSchema';
+import { FileInput } from '../../src/components/FileInput';
+
+interface FormValues {
+  title: string;
+  category: string;
+  description: string;
+  price: string;
+  fullName: string;
+  email: string;
+  cellPhone: string;
+  files: File[];
+}
 
 export default function PublishedPage() {
   const [files, setFiles] = useState<File[]>([]);
 
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const newFiles = acceptedFiles.map((file) => URL.createObjectURL(file));
-
-      setFiles((prev) => [...prev, newFiles]);
+  const methods = useForm({
+    defaultValues: {
+      title: '',
+      category: '',
+      description: '',
+      price: '',
+      fullName: '',
+      email: '',
+      cellPhone: '',
+      files: [],
     },
-    [setFiles]
-  );
-
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
+    mode: 'onBlur',
+    resolver: yupResolver(validationSchema),
   });
 
-  const handleRemoveFile = (file: File) =>
-    setFiles(files.filter((fileSaved) => fileSaved !== file));
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    setValue,
+  } = methods;
+
+  const onSubmit = (data: FormValues) => console.log(data);
+
+  // const onDrop = useCallback(
+  //   (acceptedFiles: File[]) => {
+  //     const newFiles = acceptedFiles.map((file) => URL.createObjectURL(file));
+
+  //     setFiles((prev) => [...files, newFiles]);
+  //   },
+  //   [files]
+  // );
+
+  // const { getRootProps, getInputProps } = useDropzone({
+  //   onDrop,
+  // });
+
+  // const handleRemoveFile = (file: File) => {
+  //   setFiles(files.filter((fileSaved) => fileSaved !== file));
+  // };
 
   return (
     <TemplateDefault>
-      <Container maxWidth="sm">
-        <Typography
-          component={'h1'}
-          variant="h3"
-          align="center"
-          color="primary"
-          gutterBottom
-        >
-          Publicar anúncio
-        </Typography>
-
-        <Typography component={'h5'} variant="h5" align="center">
-          Quanto mais detalhado, melhor!
-        </Typography>
-      </Container>
-
-      <Container maxWidth="md">
-        <Box sx={{ backgroundColor: '#fff', padding: 3 }} borderRadius={1}>
-          <Typography component={'h6'} variant="h6" gutterBottom>
-            Título do anúncio
-          </Typography>
-
-          <TextField
-            label="ex: Bicicleta aro 26"
-            size="small"
-            fullWidth
-            variant="standard"
-            sx={{ marginBottom: 4 }}
-          />
-
-          <Select
-            variant="standard"
-            native
-            value=""
-            fullWidth
-            onChange={() => {}}
-            inputProps={{}}
-          >
-            <option value="">Selecione a categoria</option>
-            <option value={1}></option>
-            <option value={1}>Bebê e Criança</option>
-            <option value={2}>Agricultura</option>
-            <option value={3}>Moda</option>
-            <option value={3}>Carros, Motos e Barcos</option>
-            <option value={3}>Serviços</option>
-            <option value={3}>Lazer</option>
-            <option value={3}>Animais</option>
-            <option value={3}>Móveis, Casa e Jardim</option>
-            <option value={3}>Imoveis</option>
-            <option value={3}>Equipamentos e Ferramentas</option>
-            <option value={3}>Celulares e Tables</option>
-            <option value={3}>Esporte</option>
-            <option value={3}>Tecnologia</option>
-            <option value={3}>Emprego</option>
-            <option value={3}>Outros</option>
-          </Select>
-        </Box>
-      </Container>
-
-      <Container maxWidth="md" sx={{ marginTop: 2 }}>
-        <Box sx={{ backgroundColor: '#fff', padding: 3 }} borderRadius={1}>
-          <Typography component={'h6'} variant="h6" gutterBottom>
-            Imagens
-          </Typography>
-
-          <Typography component={'div'} variant="body2" gutterBottom>
-            A primeira imagem é a principal
-          </Typography>
-
-          <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-            <Box
-              {...getRootProps()}
-              sx={{
-                padding: 1,
-                width: 200,
-                height: 150,
-                backgroundColor: 'rgb(242, 244, 245)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: 'dashed',
-                textAlign: 'center',
-                cursor: 'pointer',
-                margin: '0 15px 15px 0',
-              }}
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Container maxWidth="sm">
+            <Typography
+              component={'h1'}
+              variant="h3"
+              align="center"
+              color="primary"
+              gutterBottom
             >
-              <input {...getInputProps()} />
+              Publicar anúncio
+            </Typography>
 
-              <Typography variant="body2">
-                Clique para adicionar ou arraste a imagem aqui
-              </Typography>
-            </Box>
+            <Typography
+              component={'h5'}
+              variant="h5"
+              align="center"
+              sx={{ marginBottom: 2 }}
+            >
+              Quanto mais detalhado, melhor!
+            </Typography>
+          </Container>
 
-            {files.map((file, index) => {
-              return (
-                <Box
-                  key={index}
-                  sx={{
-                    position: 'relative',
-                    width: 200,
-                    height: 150,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center center',
-                    margin: '0 15px 15px 0',
-                  }}
-                  style={{
-                    backgroundImage: `url(${file})`,
-                  }}
-                >
-                  {index === 0 ? (
-                    <Box
-                      sx={{
-                        backgroundColor: 'blue',
-                        padding: '6px 10px',
-                        position: 'absolute',
-                        color: '#fff',
-                        textTransform: 'uppercase',
-                        bottom: 0,
-                        left: 0,
-                      }}
+          <Container maxWidth="md">
+            <Box sx={{ backgroundColor: '#fff', padding: 3 }} borderRadius={1}>
+              <TextField
+                label="Titulo do Anúncio"
+                placeholder="ex: Bicicleta aro 26"
+                size="small"
+                fullWidth
+                variant="standard"
+                sx={{ marginBottom: 4 }}
+                {...register('title')}
+                error={!!errors.title?.message}
+                helperText={errors.title?.message}
+              />
+
+              <FormControl fullWidth error={!!errors.category}>
+                <FormLabel>Categoria</FormLabel>
+
+                <Controller
+                  name="category"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <Select
+                      label="Categoria"
+                      variant="standard"
+                      fullWidth
+                      id="category"
+                      value={field.value}
+                      {...register('category')}
                     >
-                      <Typography variant="body2">Principal</Typography>
-                    </Box>
-                  ) : null}
+                      <MenuItem value="">Selecione uma categoria</MenuItem>
+                      <MenuItem value="Bebê e Criança">Bebê e Criança</MenuItem>
+                      <MenuItem value="Agricultura">Agricultura</MenuItem>
+                      <MenuItem value="Moda">Moda</MenuItem>
+                      <MenuItem value="Carros, Motos e Barcos">
+                        Carros, Motos e Barcos
+                      </MenuItem>
+                      <MenuItem value="Serviços">Serviços</MenuItem>
+                      <MenuItem value="Lazer">Lazer</MenuItem>
+                      <MenuItem value="Animais">Animais</MenuItem>
+                      <MenuItem value="Móveis, Casa e Jardim">
+                        Móveis, Casa e Jardim
+                      </MenuItem>
+                      <MenuItem value="Imoveis">Imoveis</MenuItem>
+                      <MenuItem value="Equipamentos e Ferramentas">
+                        Equipamentos e Ferramentas
+                      </MenuItem>
+                      <MenuItem value="Celulares e Tables">
+                        Celulares e Tables
+                      </MenuItem>
+                      <MenuItem value="Esporte">Esporte</MenuItem>
+                      <MenuItem value="Tecnologia">Tecnologia</MenuItem>
+                      <MenuItem value="Emprego">Emprego</MenuItem>
+                      <MenuItem value="Outros">Outros</MenuItem>
+                    </Select>
+                  )}
+                />
 
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      textAlign: 'center',
-                      width: '100%',
-                      height: '100%',
+                <FormHelperText>{errors.category?.message}</FormHelperText>
+              </FormControl>
+            </Box>
+          </Container>
 
-                      '&:hover': {
-                        backgroundColor: 'rgba(0,0,0,0.4)',
-                        cursor: 'pointer',
-                      },
-                    }}
-                  >
-                    <IconButton onClick={() => handleRemoveFile(file)}>
-                      <DeleteForever sx={{ color: '#fff' }} fontSize="large" />
-                    </IconButton>
-                  </Box>
-                </Box>
-              );
-            })}
-          </Box>
-        </Box>
-      </Container>
+          <Container maxWidth="md" sx={{ marginTop: 2 }}>
+            <Box sx={{ backgroundColor: '#fff', padding: 3 }} borderRadius={1}>
+              <Typography component={'h6'} variant="h6" gutterBottom>
+                Imagens
+              </Typography>
 
-      <Container maxWidth="md" sx={{ marginTop: 2 }}>
-        <Box sx={{ backgroundColor: '#fff', padding: 3 }} borderRadius={1}>
-          <Typography component={'h6'} variant="h6" gutterBottom>
-            Descrição
-          </Typography>
+              <Typography component={'div'} variant="body2" gutterBottom>
+                A primeira imagem é a principal
+              </Typography>
 
-          <Typography component={'div'} variant="body2" gutterBottom>
-            Escreva os detalhes do que está vendendo
-          </Typography>
+              <FileInput
+                accept="image/png, image/jpg, image/jpeg, image/gif"
+                multiple
+                name="files"
+              />
+            </Box>
+          </Container>
 
-          <TextField multiline rows={6} variant="outlined" fullWidth />
-        </Box>
-      </Container>
+          <Container maxWidth="md" sx={{ marginTop: 2 }}>
+            <Box sx={{ backgroundColor: '#fff', padding: 3 }} borderRadius={1}>
+              <Typography component={'h6'} variant="h6" gutterBottom>
+                Descrição
+              </Typography>
 
-      <Container maxWidth="md" sx={{ marginTop: 2 }}>
-        <Box sx={{ backgroundColor: '#fff', padding: 3 }} borderRadius={1}>
-          <Typography component={'h6'} variant="h6" gutterBottom>
-            Preço
-          </Typography>
+              <TextField
+                label="Escreva os detalhes do que está vendendo aqui..."
+                multiline
+                rows={6}
+                variant="outlined"
+                fullWidth
+                {...register('description')}
+                error={!!errors.description?.message}
+                helperText={errors.description?.message}
+              />
+            </Box>
+          </Container>
 
-          <FormControl fullWidth variant="outlined" component={'fieldset'}>
-            <InputLabel>Valor</InputLabel>
+          <Container maxWidth="md" sx={{ marginTop: 2 }}>
+            <Box sx={{ backgroundColor: '#fff', padding: 3 }} borderRadius={1}>
+              <FormControl fullWidth variant="outlined" component={'fieldset'}>
+                <InputLabel style={errors.price && { color: '#d32f2f' }}>
+                  Preço de Venda
+                </InputLabel>
 
-            <OutlinedInput
-              label="Valor"
-              onChange={() => {}}
-              startAdornment={
-                <InputAdornment position="start">R$</InputAdornment>
-              }
-            />
-          </FormControl>
-        </Box>
-      </Container>
+                <OutlinedInput
+                  label="Preço de Venda"
+                  {...register('price')}
+                  error={!!errors.price?.message}
+                  startAdornment={
+                    <InputAdornment position="start">R$</InputAdornment>
+                  }
+                />
 
-      <Container maxWidth="md" sx={{ marginTop: 2 }}>
-        <Box
-          sx={{
-            backgroundColor: '#fff',
-            padding: 3,
-            gap: 2,
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          borderRadius={1}
-        >
-          <Typography component={'h6'} variant="h6" gutterBottom>
-            Dados de contato
-          </Typography>
+                <FormHelperText sx={{ color: '#d32f2f' }}>
+                  {errors.price?.message}
+                </FormHelperText>
+              </FormControl>
+            </Box>
+          </Container>
 
-          <TextField
-            size="small"
-            label="Nome Completo"
-            variant="outlined"
-            fullWidth
-          />
+          <Container maxWidth="md" sx={{ marginTop: 2 }}>
+            <Box
+              sx={{
+                backgroundColor: '#fff',
+                padding: 3,
+                gap: 2,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+              borderRadius={1}
+            >
+              <Typography component={'h6'} variant="h6" gutterBottom>
+                Dados de contato
+              </Typography>
 
-          <TextField size="small" label="E-mail" variant="outlined" fullWidth />
+              <TextField
+                size="small"
+                label="Nome Completo"
+                variant="outlined"
+                fullWidth
+                {...register('fullName')}
+                error={!!errors.fullName?.message}
+                helperText={errors.fullName?.message}
+              />
 
-          <TextField
-            size="small"
-            label="Telefone"
-            variant="outlined"
-            fullWidth
-          />
-        </Box>
-      </Container>
+              <TextField
+                size="small"
+                label="E-mail"
+                variant="outlined"
+                fullWidth
+                {...register('email')}
+                error={!!errors.email?.message}
+                helperText={errors.email?.message}
+              />
 
-      <Container maxWidth="md" sx={{ marginTop: 2 }}>
-        <Box textAlign="right">
-          <Button variant="contained">Publicar Anúncio</Button>
-        </Box>
-      </Container>
+              <TextField
+                size="small"
+                label="Telefone"
+                variant="outlined"
+                fullWidth
+                {...register('cellPhone')}
+                error={!!errors.cellPhone?.message}
+                helperText={errors.cellPhone?.message}
+              />
+            </Box>
+          </Container>
+
+          <Container maxWidth="md" sx={{ marginTop: 2 }}>
+            <Box textAlign="right">
+              <Button variant="contained" type="submit">
+                Publicar Anúncio
+              </Button>
+            </Box>
+          </Container>
+        </form>
+      </FormProvider>
     </TemplateDefault>
   );
 }
