@@ -1,7 +1,17 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, Container, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  TextField,
+  Typography,
+} from '@mui/material';
+import axios, { AxiosError } from 'axios';
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+import { useCustomToast } from '../../../src/hooks/useCustomToast';
 import { TemplateDefault } from '../../../src/templates/TemplateDefault';
 import {
   initialValues,
@@ -16,10 +26,13 @@ interface FormValues {
 }
 
 const Signup: NextPage = () => {
+  const { notify } = useCustomToast();
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty, isValid },
+    formState: { errors, isDirty, isValid, isSubmitting },
     reset,
   } = useForm<FormValues>({
     mode: 'onBlur',
@@ -27,9 +40,24 @@ const Signup: NextPage = () => {
     defaultValues: initialValues,
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-    reset();
+  const onSubmit = async (formValues: FormValues) => {
+    try {
+      const response = await axios.post('/api/users', formValues);
+
+      notify({
+        message: 'Usuário cadastrado com sucesso',
+        type: 'success',
+      });
+
+      reset();
+
+      router.push('/auth/signin');
+    } catch (error: unknown | AxiosError) {
+      notify({
+        message: `Ocorreu um erro ao cadastrar novo usuário. ${error}`,
+        type: 'error',
+      });
+    }
   };
 
   return (
@@ -99,17 +127,27 @@ const Signup: NextPage = () => {
               helperText={errors.passwordConfirmation?.message}
             />
 
-            <Button
-              disabled={!isDirty || !isValid}
-              variant="contained"
-              type="submit"
+            <Box
               sx={{
-                marginTop: 3,
-                marginBottom: 3,
+                paddingTop: 2,
+                paddingBottom: 2,
               }}
             >
-              Criar conta
-            </Button>
+              {isSubmitting ? (
+                <CircularProgress sx={{ display: 'block', margin: 'auto' }} />
+              ) : (
+                <Button
+                  disabled={!isDirty || !isValid}
+                  variant="contained"
+                  type="submit"
+                  sx={{
+                    width: '100%',
+                  }}
+                >
+                  Criar conta
+                </Button>
+              )}
+            </Box>
           </Box>
         </form>
       </Container>

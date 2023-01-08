@@ -10,8 +10,10 @@ import '@fontsource/roboto/700.css';
 import createEmotionCache from '../utils/createEmotionCache';
 
 import { theme } from '../styles/theme';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Head from 'next/head';
+import { ToastContainer } from 'react-toastify';
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -30,6 +32,7 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
 
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        <ToastContainer />
 
         <Component {...pageProps} />
       </ThemeProvider>

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { connect } from '../../src/db/connection';
-import { User } from '../../src/models/users';
+import User from '../../src/models/users-model';
 import { crypt } from '../../utils/password';
 
 const users = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -26,7 +26,7 @@ const users = async (req: NextApiRequest, res: NextApiResponse) => {
         password: passwordCrypted,
       });
 
-      await user.save();
+      user.save();
 
       res.status(201).json(user);
       break;
