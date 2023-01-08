@@ -9,7 +9,5 @@ export const connect = async () => {
     .catch((err) => console.log(err));
   console.log('Mongoose Connection Established');
 
-  // const Todo = mongoose.models.Todo || mongoose.model('Todo', TodoSchema);
-
   return { conn };
 };
