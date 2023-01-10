@@ -13,6 +13,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
+import { signOut, useSession } from 'next-auth/client';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -20,8 +21,7 @@ export const Header = () => {
   const [anchorUserMenu, setAnchorUserMenu] = useState<HTMLElement | null>(
     null
   );
-  // const avatarUrl = 'https://github.com/davi1985.png';
-  const avatarUrl = '';
+  const [session] = useSession();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -43,7 +43,7 @@ export const Header = () => {
             </Typography>
 
             <Link
-              href={'/user/publish'}
+              href={session ? '/user/publish' : '/auth/signin'}
               style={{ color: 'inherit', textDecoration: 'none' }}
             >
               <Button color="inherit" variant="outlined">
@@ -51,20 +51,22 @@ export const Header = () => {
               </Button>
             </Link>
 
-            <IconButton
-              sx={{ display: 'flex', gap: 1, color: '#fff' }}
-              onClick={(event) => setAnchorUserMenu(event.currentTarget)}
-            >
-              {avatarUrl ? (
-                <Avatar src="https://github.com/davi1985.png" />
-              ) : (
-                <AccountCircle />
-              )}
+            {session ? (
+              <IconButton
+                sx={{ display: 'flex', gap: 1, color: '#fff' }}
+                onClick={(event) => setAnchorUserMenu(event.currentTarget)}
+              >
+                {session.user?.image ? (
+                  <Avatar src={session.user?.image} />
+                ) : (
+                  <AccountCircle />
+                )}
 
-              <Typography variant="subtitle2" color="#fff">
-                Davi Silva
-              </Typography>
-            </IconButton>
+                <Typography variant="subtitle2" color="#fff">
+                  {session.user?.name}
+                </Typography>
+              </IconButton>
+            ) : null}
 
             <Menu
               open={Boolean(anchorUserMenu)}
@@ -81,9 +83,9 @@ export const Header = () => {
 
               <Divider sx={{ margin: '8px 0' }} />
 
-              <Link href={'/logoff'} style={{ textDecoration: 'none' }}>
-                <MenuItem>Sair</MenuItem>
-              </Link>
+              <MenuItem onClick={() => signOut({ callbackUrl: '/' })}>
+                Sair
+              </MenuItem>
             </Menu>
           </Toolbar>
         </Container>
