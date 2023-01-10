@@ -1,6 +1,7 @@
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import type { AppProps } from 'next/app';
+import { Provider } from 'next-auth/client';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -25,18 +26,20 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   return (
-    <CacheProvider value={emotionCache}>
-      <Head>
-        <title>Anunx</title>
-      </Head>
+    <Provider session={pageProps.session}>
+      <CacheProvider value={emotionCache}>
+        <Head>
+          <title>Anunx</title>
+        </Head>
 
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <ToastContainer />
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <ToastContainer />
 
-        <Component {...pageProps} />
-      </ThemeProvider>
-    </CacheProvider>
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </CacheProvider>
+    </Provider>
   );
 };
 

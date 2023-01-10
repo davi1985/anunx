@@ -1,120 +1,123 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { yupResolver } from '@hookform/resolvers/yup';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { NextPage } from 'next';
+import { useSession, signIn } from 'next-auth/client';
+import { useRouter } from 'next/router';
 
-function Copyright(props: any) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
+import { useForm } from 'react-hook-form';
+import { useCustomToast } from '../../../src/hooks/useCustomToast';
+import { TemplateDefault } from '../../../src/templates/TemplateDefault';
+import {
+  initialValues,
+  validationSchema,
+} from '../../../utils/userLoginValidationSchema';
+
+interface FormValues {
+  email: string;
+  password: string;
 }
 
-const theme = createTheme();
+const Signin: NextPage = () => {
+  const { notify } = useCustomToast();
+  const router = useRouter();
 
-export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+  const [session] = useSession();
+
+  console.log(session);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isDirty, isValid, isSubmitting },
+    reset,
+  } = useForm<FormValues>({
+    mode: 'onBlur',
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
+  });
+
+  const onSubmit = async (formValues: FormValues) => {
+    signIn('credentials', {
+      email: formValues.email,
+      password: formValues.password,
+      callbackUrl: 'http://localhost:3000/user/dashboard',
     });
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
+    <TemplateDefault>
+      <Container maxWidth="sm" component="main">
+        <Typography component="h1" variant="h2" align="center">
+          Entre na sua conta
+        </Typography>
+      </Container>
+
+      <Container maxWidth="sm">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
+            sx={{
+              backgroundColor: '#fff',
+              padding: 3,
+              marginBottom: 3,
+              marginTop: 3,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+            }}
           >
             <TextField
-              margin="normal"
-              required
+              size="small"
+              label="E-mail"
+              variant="standard"
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
+              {...register('email')}
+              error={!!errors.email?.message}
+              helperText={errors.email?.message}
             />
+
             <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
               type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
+              size="small"
+              label="Sua Senha"
+              variant="standard"
               fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              {...register('password')}
+              error={!!errors.password?.message}
+              helperText={errors.password?.message}
+            />
+
+            <Box
+              sx={{
+                paddingTop: 2,
+                paddingBottom: 2,
+              }}
             >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
+              {isSubmitting ? (
+                <CircularProgress sx={{ display: 'block', margin: 'auto' }} />
+              ) : (
+                <Button
+                  disabled={!isDirty || !isValid}
+                  variant="contained"
+                  type="submit"
+                  sx={{
+                    width: '100%',
+                  }}
+                >
+                  Entrar
+                </Button>
+              )}
+            </Box>
           </Box>
-        </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+        </form>
       </Container>
-    </ThemeProvider>
+    </TemplateDefault>
   );
-}
+};
+
+export default Signin;
