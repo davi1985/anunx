@@ -25,7 +25,7 @@ interface FormValues {
   password: string;
 }
 
-const Signin: NextPage = () => {
+const Signin: NextPage = ({ APP_URL }: { APP_URL?: string }) => {
   const { notify } = useCustomToast();
   const router = useRouter();
 
@@ -47,13 +47,13 @@ const Signin: NextPage = () => {
     signIn('credentials', {
       email: formValues.email,
       password: formValues.password,
-      callbackUrl: 'http://localhost:3000/user/dashboard',
+      callbackUrl: `${APP_URL}/user/dashboar`,
     });
   };
 
   const handleGoolgeLogin = () => {
     signIn('google', {
-      callbackUrl: 'http://localhost:3000/user/dashboard',
+      callbackUrl: `${APP_URL}/user/dashboard`,
     });
   };
 
@@ -150,6 +150,12 @@ const Signin: NextPage = () => {
       </Container>
     </TemplateDefault>
   );
+};
+
+Signin.getInitialProps = async function () {
+  return {
+    APP_URL: process.env.APP_URL,
+  };
 };
 
 export default Signin;
