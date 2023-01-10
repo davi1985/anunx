@@ -22,10 +22,10 @@ export default NextAuth({
         }
       },
     }),
-    // Providers.Google({
-    //   clientId: process.env.GOOGLE_ID || '',
-    //   clientSecret: process.env.GOOGLE_SECRET || '',
-    // }),
+    Providers.Google({
+      clientId: process.env.GOOGLE_ID || '',
+      clientSecret: process.env.GOOGLE_SECRET || '',
+    }),
   ],
 
   secret: process.env.SECRET,

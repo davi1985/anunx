@@ -10,6 +10,7 @@ import {
 import { NextPage } from 'next';
 import { useSession, signIn } from 'next-auth/client';
 import { useRouter } from 'next/router';
+import { Google } from '@mui/icons-material';
 
 import { useForm } from 'react-hook-form';
 import { useCustomToast } from '../../../src/hooks/useCustomToast';
@@ -50,6 +51,12 @@ const Signin: NextPage = () => {
     });
   };
 
+  const handleGoolgeLogin = () => {
+    signIn('google', {
+      callbackUrl: 'http://localhost:3000/user/dashboard',
+    });
+  };
+
   return (
     <TemplateDefault>
       <Container maxWidth="sm" component="main">
@@ -71,6 +78,31 @@ const Signin: NextPage = () => {
               gap: 2,
             }}
           >
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Button
+                sx={{ backgroundColor: '#de5246' }}
+                variant="contained"
+                startIcon={<Google />}
+                onClick={handleGoolgeLogin}
+              >
+                Entrar com o Google
+              </Button>
+            </Box>
+
+            <Box
+              sx={{
+                backgroundColor: '#e8e8e8',
+                height: '1px',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 2,
+              }}
+            >
+              <span style={{ background: '#fff', padding: '0 20px' }}>ou</span>
+            </Box>
+
             <TextField
               size="small"
               label="E-mail"
