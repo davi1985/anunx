@@ -46,9 +46,18 @@ export default function PublishedPage() {
     handleSubmit,
     formState: { errors },
     control,
+    watch,
   } = methods;
+  const values = watch();
 
   const onSubmit = (data: FormValues) => console.log(data);
+
+  const formatMoneyInput = (n: number) =>
+    'R$ ' +
+    n
+      .toFixed(2)
+      .replace('.', ',')
+      .replace(/(\d)(?=(\d{3})+\,)/g, '$1.');
 
   return (
     <TemplateDefault>

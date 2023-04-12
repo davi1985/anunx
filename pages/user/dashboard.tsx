@@ -2,7 +2,7 @@ import { Button, Container, Grid, Typography } from '@mui/material';
 import { Card } from '../../src/components/Card';
 import { TemplateDefault } from '../../src/templates/TemplateDefault';
 
-export default function UserDashboard() {
+const Home = () => {
   return (
     <TemplateDefault>
       <Container maxWidth="sm">
@@ -50,4 +50,6 @@ export default function UserDashboard() {
       </Container>
     </TemplateDefault>
   );
-}
+};
+
+export default Home;

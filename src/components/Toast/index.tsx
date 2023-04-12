@@ -1,6 +1,5 @@
-import { Snackbar } from '@mui/material';
-import { Alert } from '@mui/material';
-import { SyntheticEvent, useContext } from 'react';
+import { Alert, Snackbar } from '@mui/material';
+import { SyntheticEvent } from 'react';
 
 type ToastPros = {
   open: boolean;
